@@ -35,7 +35,7 @@ def cvx_opt_constB_elementwise(states, actions, next_states, A_global, B_global,
         lip_terms = lip_term_A + lip_term_err
         error_bound = err_term + lip_terms
         prob = cp.Problem(cp.Minimize(cp.sum(error_bound)))
-        prob.solve()
+        prob.solve(solver=cp.MOSEK)
 
         As.append(A.value)
         err_us.append(err_u.value)

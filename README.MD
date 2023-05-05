@@ -10,6 +10,7 @@ From the base directory of this repository, install dependencies with:
 ~~~~
 pip install -r requirements.txt
 ~~~~
+**Note**: We are advising the users to create a fresh virtualenv with Python 3.8.5.  
 
 ## Usage
 The following code snippets can be used to reproduce the results in the paper. They are intended to be run from the `src/` directory of this repository.

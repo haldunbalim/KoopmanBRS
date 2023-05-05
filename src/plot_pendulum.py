@@ -4,7 +4,7 @@ from matplotlib.patches import Rectangle
 from matplotlib.lines import Line2D
 from scipy.io import loadmat
 import pickle
-from simulation import PendulumModel
+from simulation import PendulumModel, Simulator, PendulumState, PendulumAction
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from utils.geometry import minkowski_diff_poly_box
@@ -102,8 +102,8 @@ def control(encoded, target_node):
     u_lo, u_hi = action_limits
     constraints = [target_set_shrinked.A@nxt <=
                    target_set_shrinked.b, u_hi >= u, u_lo <= u]
-    prob = cp.Problem(cp.Minimize(cp.norm(u)), constraints)
-    prob.solve()
+    prob = cp.Problem(cp.Minimize(cp.norm(u)+cp.norm(nxt)), constraints)
+    prob.solve(solver=cp.MOSEK)
     return u.value, nxt.value
 
 
@@ -114,8 +114,11 @@ states = [curr[:2]]
 actions = []
 while curr_target is not None:
     u, nxt_pred = control(curr, curr_target)
-    curr = model_sin.encode(nxt_pred[:2])
-    states.append(nxt_pred[:2])
+    nxt = Simulator.successor_ivp(dyn_model, PendulumState(*curr[:dyn_model.nx]),
+                                   PendulumAction(*u), bound=False, integrate=False)
+    nxt = np.array(nxt)
+    curr = model_sin.encode(nxt)
+    states.append(nxt)
     actions.append(u)
     curr_target = curr_target.parent
 
