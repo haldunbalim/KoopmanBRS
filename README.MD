@@ -1,4 +1,4 @@
-# Koopman-based Implicit Backward Reachable Sets for Unknown Nonlinear Systems
+# Koopman-inspired Implicit Backward Reachable Sets for Unknown Nonlinear Systems
 
 The code accompanying our IEEE L-CSS submission that reproduces the results in the paper.
 
